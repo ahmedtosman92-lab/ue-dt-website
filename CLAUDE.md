@@ -12,3 +12,8 @@ Read `design-intent/prd.md` at the start of every session.
 - Components live in components/, pages live in app/
 - All images go in public/assets/images/, logos in public/assets/branding/
 - No auth, no pricing, no subscriptions — portfolio/info site only
+
+## Key documents — read these before writing any code
+- design-intent/prd.md — full requirements
+- design-intent/google-stitch/design-system.md — brand colours, fonts, spacing
+- design-intent/build-guide.md — full build order and Claude Code prompts

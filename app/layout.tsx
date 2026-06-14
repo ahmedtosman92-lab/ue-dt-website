@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
 import './globals.css'
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
   description: 'UE-DT delivers MES, EMS, OEE, Smart Weighing, and Supply Chain solutions for Egyptian manufacturing plants.',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body>{children}</body>
