@@ -57,24 +57,151 @@ Do these once before anything else.
 | Git | For version control |
 | Google account | For Google Stitch (stitch.withgoogle.com) |
 
-### 0.2 Create the Next.js project
+### 0.2 Set up the project manually
 
-Open your terminal in the folder where you keep projects and run:
+> **Why manual instead of `create-next-app`:** The project folder and placeholder files are created first in step 0.5. Running `create-next-app` afterwards conflicts with those files and installs Tailwind v3 — not v4. Manual config gives full control.
 
-```bash
-npx create-next-app@latest ue-website
+Create these four files in the project root (plain text, named exactly as shown):
+
+**`package.json`**
+```json
+{
+  "name": "ue-website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^15.3.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "framer-motion": "^11.0.0",
+    "gsap": "^3.12.5",
+    "@gsap/react": "^2.1.0",
+    "react-hook-form": "^7.54.0",
+    "zod": "^3.23.0",
+    "@hookform/resolvers": "^3.9.0",
+    "clsx": "^2.1.0",
+    "tailwind-merge": "^2.5.0"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^4.0.0",
+    "@tailwindcss/postcss": "^4.0.0",
+    "eslint": "^9",
+    "eslint-config-next": "^15.3.3"
+  }
+}
 ```
 
-When prompted, choose:
-- TypeScript → **Yes**
-- ESLint → **Yes**
-- Tailwind CSS → **Yes**
-- `src/` directory → **No**
-- App Router → **Yes**
-- Turbopack → **Yes**
-- Import alias → **No** (keep default `@/*`)
+**`tsconfig.json`**
+```json
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "allowArbitraryExtensions": true,
+    "plugins": [{ "name": "next" }],
+    "paths": { "@/*": ["./*"] }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
+```
 
-### 0.3 Start Claude Code and initialise
+**`next.config.ts`**
+```typescript
+import type { NextConfig } from 'next'
+
+const nextConfig: NextConfig = {}
+
+export default nextConfig
+```
+
+**`postcss.config.mjs`** (Tailwind v4 uses PostCSS — no `tailwind.config.ts` needed)
+```javascript
+const config = {
+  plugins: {
+    '@tailwindcss/postcss': {},
+  },
+}
+
+export default config
+```
+
+Then update `app/globals.css` (replace entire contents):
+```css
+@import "tailwindcss";
+
+@theme {
+  --color-tertiary: #FFFFFF;
+  --color-text-body: #1A1A2E;
+  --color-text-muted: #6B7280;
+}
+```
+
+Then update `app/layout.tsx` (replace entire contents):
+```typescript
+import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
+import './globals.css'
+
+export const metadata: Metadata = {
+  title: 'UE Technology | Industry 4.0 Digital Transformation — Cairo, Egypt',
+  description: 'UE-DT delivers MES, EMS, OEE, Smart Weighing, and Supply Chain solutions for Egyptian manufacturing plants.',
+}
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+Install all dependencies:
+```bash
+npm install
+```
+
+### 0.3 Initialise shadcn/ui
+
+```bash
+npx shadcn@latest init
+```
+
+When prompted:
+- Component library → **Radix**
+- Preset → **Nova** (Lucide icons + Geist font)
+
+This creates `components.json`, populates `lib/utils.ts` with the `cn()` helper, and wires the Geist font into `app/layout.tsx`.
+
+Commit the result:
+```bash
+git add package.json tsconfig.json next.config.ts postcss.config.mjs components.json app/globals.css app/layout.tsx lib/utils.ts next-env.d.ts package-lock.json
+git commit -m "chore: initialize Next.js 15, Tailwind v4, and shadcn/ui"
+```
+
+### 0.4 Start Claude Code and initialise
 
 ```bash
 cd ue-website
@@ -89,7 +216,7 @@ Then inside Claude Code, type:
 
 This lets Claude Code scan your project and create a starter `CLAUDE.md`.
 
-### 0.4 Create your CLAUDE.md
+### 0.5 Create your CLAUDE.md
 
 Replace the contents of `CLAUDE.md` with this:
 
@@ -124,7 +251,7 @@ Muted text: #6B7280
 - One feature per session — I will use /clear between tasks
 ```
 
-### 0.5 Build the folder structure
+### 0.6 Build the folder structure
 
 Paste this entire block into your terminal from the project root:
 
@@ -150,7 +277,7 @@ touch design-intent/google-stitch/design-system.md
 
 Then copy your downloaded `prd.md` into `design-intent/prd.md`.
 
-### 0.6 Connect Stitch MCP (optional but powerful)
+### 0.7 Connect Stitch MCP (optional but powerful)
 
 Inside Claude Code:
 
@@ -233,7 +360,7 @@ ue-website/
 │       ├── team/  clients/  industry/  blog/
 │
 ├── CLAUDE.md                         Claude Code reads every session
-├── next.config.ts  tailwind.config.ts  tsconfig.json  package.json
+├── next.config.ts  postcss.config.mjs  tsconfig.json  package.json  package-lock.json
 ```
 
 ### Key rules to remember
