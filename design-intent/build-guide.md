@@ -277,15 +277,19 @@ touch design-intent/google-stitch/design-system.md
 
 Then copy your downloaded `prd.md` into `design-intent/prd.md`.
 
-### 0.7 Connect Stitch MCP (optional but powerful)
+### 0.7 Connect Stitch MCP — **Done**
 
-Inside Claude Code:
+The Stitch MCP is already connected in this project. Claude Code can call Stitch directly without opening a browser.
 
-```
-/mcp add stitch https://mcp.stitch.withgoogle.com
-```
+> **Note:** The `/mcp add stitch` slash command does not work in the VSCode extension environment. The connection was established through the Claude Code MCP configuration instead.
 
-This lets Claude Code read your Stitch designs directly. If it does not work yet, you will use the manual export method instead (covered in Stage 5).
+What this unlocks — Claude Code can now:
+- Create and list Stitch projects
+- Generate screens from text prompts
+- Apply a design system to all screens at once
+- Read screen content back into the conversation
+
+You will use these capabilities in Stage 5. No manual export is required unless you want to browse designs visually in the Stitch web UI.
 
 ---
 
@@ -295,15 +299,16 @@ Everything you will use, and what each piece does.
 
 | Layer | Tool | What it does |
 |-------|------|--------------|
-| Design | **Google Stitch** | AI designs your page layouts, exports Tailwind code |
+| Design | **Google Stitch** | AI designs your page layouts, exports Tailwind code — connected via MCP so Claude Code can call Stitch directly without manual exports |
 | Language | **TypeScript** | JavaScript + type safety (all your files are `.ts`/`.tsx`) |
 | Framework | **Next.js 15** | Page routing, SEO, image optimisation, deployment |
 | UI library | **React 19** | The component model — reusable building blocks |
 | Styling | **Tailwind CSS v4** | Utility classes for styling — matches Stitch exports |
-| Components | **shadcn/ui** | Pre-built buttons, forms, cards |
+| Components | **shadcn/ui** | Pre-built buttons, forms, cards — pulls in Radix UI primitives, Lucide icons, and `tw-animate-css` automatically |
+| Utilities | **clsx + tailwind-merge + lucide-react** | `clsx` and `tailwind-merge` combine and deduplicate Tailwind classes (wired into `lib/utils.ts` as `cn()`); `lucide-react` provides icons used across components |
 | Animation | **Framer Motion** | Fade-ins, card reveals, page transitions |
-| Scroll FX | **GSAP + ScrollTrigger** | Parallax, pinning, scroll timelines |
-| Forms | **React Hook Form + Zod** | Contact form handling and validation |
+| Scroll FX | **GSAP + ScrollTrigger** | Parallax, pinning, scroll timelines — `@gsap/react` provides the `useGSAP` hook for safe use inside React components |
+| Forms | **React Hook Form + Zod** | Contact form handling and validation — `@hookform/resolvers` bridges the two |
 | Hosting | **Vercel** | Free deployment with a live URL |
 | Dev tool | **Claude Code** | Writes the code from your prompts |
 
@@ -499,6 +504,23 @@ Now you design every screen visually in Stitch before writing real code. Design 
 
 #### How to design in Stitch
 
+Because the Stitch MCP is connected, you have two workflows. Use the MCP workflow — it is faster and keeps everything inside Claude Code.
+
+**MCP workflow (primary — no browser needed)**
+
+For each screen, give Claude Code a prompt like this:
+
+```
+Using the Stitch MCP, generate a screen for the UE-DT homepage.
+[paste the prompt from the section below]
+Apply the UE-DT design system from design-intent/google-stitch/design-system.md.
+Save the result so I can review it.
+```
+
+Claude Code will call Stitch, generate the screen, and return the Tailwind HTML directly in the conversation. You can then iterate by asking for changes without leaving Claude Code.
+
+**Manual workflow (fallback — if you want to browse visually)**
+
 1. Go to **stitch.withgoogle.com**, sign in with Google
 2. For each page, write a detailed prompt (templates below)
 3. Iterate until each screen looks right
@@ -560,7 +582,15 @@ Design these screens (use the homepage prompt as a template, swapping the sectio
 | Blog list page | `blog-list.html` |
 | Blog post page | `blog-post.html` |
 
-#### How to export and save
+#### How to save the output
+
+**Via MCP:** Claude Code returns the Tailwind HTML in the conversation. Ask it to save directly:
+
+```
+Save the homepage screen output to design-intent/google-stitch/exports/homepage.html
+```
+
+**Via manual export (fallback):**
 
 1. Click the screen → click the code icon (`< >`)
 2. Choose **Tailwind CSS** export

@@ -102,8 +102,10 @@ Full redesign and rebuild of ue-dt.com from WordPress/Elementor to a modern Next
 
 | Tool | Version / Status | Purpose |
 |------|-----------------|---------|
-| **Google Stitch** | Free (Google Labs) | AI UI/UX design, screen generation, Tailwind export |
-| Figma | Optional refinement only | Design polish if needed after Stitch |
+| **Figma** | Connected via MCP | Primary UI/UX design tool — all screens, components, and design system live here |
+| **Google Stitch** | Connected via MCP | AI screen generation for rapid exploration and ideation — feeds into Figma |
+
+> **Note:** Figma is the source of truth for all final designs. Stitch is used for fast first-draft generation via Claude Code (MCP), with outputs reviewed and refined in Figma before any code is written. Both MCPs are active — Claude Code can call both tools directly.
 
 ### 3.2 Frontend Framework
 
@@ -152,7 +154,7 @@ Full redesign and rebuild of ue-dt.com from WordPress/Elementor to a modern Next
 
 ## 4. Design System
 
-> **Note:** Exact values below are placeholders. Final values are extracted from the Google Stitch DESIGN.md export and locked here before development begins.
+> **Note:** Exact values below are placeholders. Final values are extracted from the Figma design file and locked here before development begins. Use the Figma MCP (`get_design_context`, `get_variable_defs`) or inspect the file manually to pull final tokens.
 
 ### 4.1 Brand Colours
 
@@ -168,12 +170,12 @@ Full redesign and rebuild of ue-dt.com from WordPress/Elementor to a modern Next
 
 | Role | Font | Weight | Size |
 |------|------|--------|------|
-| Display / Hero | To be set from Stitch | 700 | 56–72px |
-| H1 | To be set from Stitch | 600 | 40–48px |
-| H2 | To be set from Stitch | 600 | 32–36px |
-| H3 | To be set from Stitch | 500 | 24px |
-| Body | To be set from Stitch | 400 | 16–18px |
-| Caption / Label | To be set from Stitch | 400 | 12–14px |
+| Display / Hero | To be set from Figma | 700 | 56–72px |
+| H1 | To be set from Figma | 600 | 40–48px |
+| H2 | To be set from Figma | 600 | 32–36px |
+| H3 | To be set from Figma | 500 | 24px |
+| Body | To be set from Figma | 400 | 16–18px |
+| Caption / Label | To be set from Figma | 400 | 12–14px |
 
 ### 4.3 Spacing Scale
 
@@ -190,7 +192,7 @@ Use Tailwind's default spacing scale. Key intervals: `4` (16px), `6` (24px), `8`
 
 ### 4.5 Shadow Tokens
 
-Defined in `tailwind.config.ts` — pulled from Stitch export.
+Defined in `tailwind.config.ts` — pulled from Figma design file (use `get_variable_defs` via Figma MCP or inspect Effects panel manually).
 
 ---
 
@@ -249,7 +251,7 @@ Every page shares:
 
 **Purpose:** First impression for all visitors. Communicate what UE-DT does, build credibility, and direct users to the right solution or to contact.
 
-**Google Stitch source file:** `design-intent/google-stitch/exports/homepage.html`  
+**Figma source frame:** Homepage frame in the UE-DT Figma file  
 **Next.js file:** `app/page.tsx`
 
 #### Sections
@@ -287,7 +289,7 @@ export const metadata = {
 
 **Purpose:** Show all five solutions at a glance. Allow users to self-select.
 
-**Google Stitch source file:** `design-intent/google-stitch/exports/solutions-overview.html`  
+**Figma source frame:** Solutions Overview frame in the UE-DT Figma file  
 **Next.js file:** `app/solutions/page.tsx`
 
 #### Sections
@@ -310,7 +312,7 @@ export const metadata = {
 
 **Purpose:** Deep-dive on each individual solution. Convince operations managers this is the right product.
 
-**Google Stitch source file:** `design-intent/google-stitch/exports/solution-detail.html`  
+**Figma source frame:** Solution Detail frame in the UE-DT Figma file  
 **Next.js file:** `app/solutions/[slug]/page.tsx`  
 **Layout component:** `components/solutions/SolutionDetail.tsx`
 
@@ -347,7 +349,7 @@ All solution content lives in `lib/solutions-data.ts`. No CMS required for MVP.
 
 **Purpose:** Educational page that establishes UE-DT as a thought leader. Explains what Industry 4.0 means for Egyptian factories.
 
-**Google Stitch source file:** `design-intent/google-stitch/exports/industry-4-0.html`  
+**Figma source frame:** Industry 4.0 frame in the UE-DT Figma file  
 **Next.js file:** `app/industry-4-0/page.tsx`
 
 #### Sections
@@ -367,7 +369,7 @@ All solution content lives in `lib/solutions-data.ts`. No CMS required for MVP.
 
 **Purpose:** Build trust with buyers who want to know the team behind the technology.
 
-**Google Stitch source file:** `design-intent/google-stitch/exports/about-us.html`  
+**Figma source frame:** About Us frame in the UE-DT Figma file  
 **Next.js file:** `app/about-us/page.tsx`
 
 #### Sections
@@ -402,7 +404,7 @@ type TeamMember = {
 
 **Purpose:** SEO content hub. Drive organic traffic from Egyptian manufacturing search queries.
 
-**Google Stitch source file:** `design-intent/google-stitch/exports/blog-list.html`  
+**Figma source frame:** Blog List frame in the UE-DT Figma file  
 **Next.js file:** `app/blog/page.tsx`
 
 #### Sections
@@ -416,7 +418,7 @@ type TeamMember = {
 
 #### Blog Post — `/blog/[slug]`
 
-**Google Stitch source file:** `design-intent/google-stitch/exports/blog-post.html`  
+**Figma source frame:** Blog Post frame in the UE-DT Figma file  
 **Next.js file:** `app/blog/[slug]/page.tsx`
 
 | # | Section | Component |
@@ -435,7 +437,7 @@ type TeamMember = {
 
 **Purpose:** Primary lead generation page. Make it easy for a factory manager to request a meeting.
 
-**Google Stitch source file:** `design-intent/google-stitch/exports/contact-us.html`  
+**Figma source frame:** Contact Us frame in the UE-DT Figma file  
 **Next.js file:** `app/contact-us/page.tsx`
 
 #### Sections
@@ -694,13 +696,13 @@ const Timeline = dynamic(() => import('@/components/shared/Timeline'), {
 ### 12.1 Full Pipeline
 
 ```
-Google Stitch (design)
+Google Stitch via MCP (rapid screen generation / first draft)
      ↓
-Export Tailwind HTML/CSS per screen
+Review and refine in Figma (primary design tool — final source of truth)
      ↓
-Save to design-intent/google-stitch/exports/
+Claude Code reads Figma design via Figma MCP
      ↓
-Claude Code: convert HTML → TypeScript React components
+Claude Code: convert design → TypeScript React components
      ↓
 Place in components/ (see file mapping in Section 13)
      ↓
@@ -728,15 +730,21 @@ Deploy to Vercel
 - `CLAUDE.md` at root is read at every session start — keep it updated
 - Prefix every session with: `"Read CLAUDE.md and design-intent/PRD.md before starting"`
 
-### 12.3 Claude Code + Stitch MCP
+### 12.3 Claude Code + Design MCPs
 
-Connect Stitch MCP in Claude Code for direct design access:
+Both design MCPs are active. The `/mcp add` slash command does not work in the VSCode extension environment — connections are managed through Claude Code MCP configuration.
 
-```
-/mcp add stitch https://mcp.stitch.withgoogle.com
-```
+**Figma MCP (primary)** — Claude Code can:
+- Read any Figma frame or component with `get_design_context`
+- Pull design tokens (colours, typography, spacing) with `get_variable_defs`
+- Export assets directly with `download_assets`
+- Push generated designs back into Figma with `generate_figma_design`
 
-If MCP unavailable: save all Stitch HTML exports to `design-intent/google-stitch/exports/` and reference by file path in prompts.
+To use: share the Figma file URL or frame link in your prompt and Claude Code will fetch the design directly.
+
+**Stitch MCP (exploration)** — Claude Code can generate first-draft screens from text prompts via `generate_screen_from_text`. Use this for rapid ideation before finalising in Figma.
+
+If either MCP is temporarily unavailable: export from Figma as CSS/HTML manually and save to `design-intent/figma/exports/`, then reference by file path in prompts.
 
 ### 12.4 Branching Strategy
 
@@ -760,8 +768,8 @@ ue-dt-website/
 │
 ├── design-intent/                    ← design source of truth (not deployed)
 │   ├── PRD.md                        ← THIS FILE
-│   ├── google-stitch/
-│   │   ├── exports/                  ← raw HTML/Tailwind exports from Stitch
+│   ├── figma/
+│   │   ├── exports/                  ← CSS/HTML exports from Figma (fallback when MCP unavailable)
 │   │   │   ├── homepage.html
 │   │   │   ├── navbar.html
 │   │   │   ├── footer.html
@@ -773,8 +781,11 @@ ue-dt-website/
 │   │   │   ├── contact-us.html
 │   │   │   ├── blog-list.html
 │   │   │   └── blog-post.html
-│   │   └── design-system.md          ← colors, fonts, spacing from Stitch
-│   └── wireframes/                   ← optional: hand-drawn or Figma exports
+│   │   └── design-system.md          ← colors, fonts, spacing — sourced from Figma variables
+│   ├── google-stitch/
+│   │   ├── exports/                  ← Stitch first-draft HTML (exploration only)
+│   │   └── design-system.md          ← Stitch design system reference
+│   └── wireframes/                   ← optional: hand-drawn sketches
 │
 ├── public/
 │   ├── favicon.ico                   ← must be in public/ root
@@ -881,21 +892,23 @@ ue-dt-website/
 └── package.json
 ```
 
-### 13.2 Stitch Export → Component Mapping
+### 13.2 Figma Frame → Component Mapping
 
-| Stitch export | Converts to | Final path |
-|---------------|-------------|------------|
-| `homepage.html` | Sections assembled | `app/page.tsx` |
-| `navbar.html` | `Navbar.tsx` | `components/layout/` |
-| `footer.html` | `Footer.tsx` | `components/layout/` |
-| `solutions-overview.html` | `SolutionsSection.tsx` | `components/home/` |
-| `solution-card.html` | `SolutionCard.tsx` | `components/solutions/` |
-| `solution-detail.html` | `SolutionDetail.tsx` | `components/solutions/` |
-| `industry-4-0.html` | Page + sections | `app/industry-4-0/page.tsx` |
-| `about-us.html` | Page + sections | `app/about-us/page.tsx` |
-| `contact-us.html` | `ContactForm.tsx` | `components/shared/` |
-| `blog-list.html` | `BlogCard.tsx` + page | `app/blog/page.tsx` |
-| `blog-post.html` | Post layout | `app/blog/[slug]/page.tsx` |
+Claude Code reads each Figma frame via MCP (`get_design_context`) and converts it to a TypeScript React component. If MCP is unavailable, use the HTML export from `design-intent/figma/exports/`.
+
+| Figma frame | Converts to | Final path |
+|-------------|-------------|------------|
+| Homepage | Sections assembled | `app/page.tsx` |
+| Navbar | `Navbar.tsx` | `components/layout/` |
+| Footer | `Footer.tsx` | `components/layout/` |
+| Solutions Overview | `SolutionsSection.tsx` | `components/home/` |
+| Solution Card | `SolutionCard.tsx` | `components/solutions/` |
+| Solution Detail | `SolutionDetail.tsx` | `components/solutions/` |
+| Industry 4.0 | Page + sections | `app/industry-4-0/page.tsx` |
+| About Us | Page + sections | `app/about-us/page.tsx` |
+| Contact Us | `ContactForm.tsx` | `components/shared/` |
+| Blog List | `BlogCard.tsx` + page | `app/blog/page.tsx` |
+| Blog Post | Post layout | `app/blog/[slug]/page.tsx` |
 
 ---
 
